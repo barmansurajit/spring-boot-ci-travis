@@ -6,6 +6,8 @@ env:
 stages:
   - build
   - deploy
+if: tag IS blank
+
 jobs:
   include:
     - stage: build
@@ -23,7 +25,12 @@ jobs:
         file:
           - "spring-boot-ci-travis/build/libs/spring-boot-ci-travis.jar"
         skip_cleanup: true
+
     - stage: deploy
       language: bash
       script:
         - echo "Downloading application $RELEASE_TAG"
+      deploy:
+        provider: heroku
+        api_key: $HEROKU_API_KEY
+        app: spring-boot-ci-travis
