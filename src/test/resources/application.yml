@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: registration-server
+  profiles:
+    active:
+      - test
+  jpa:
+    show-sql: true
+  datasource:
+    initialization-mode: embedded
