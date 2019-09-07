@@ -20,7 +20,7 @@ jobs:
         - git config --local user.name "Travis CI"
         - git config --local user.email "travis@example.com"
         - git tag -f $RELEASE_TAG
-      deploy: github
+      deploy: &github
         provider: releases
         api_key: $GITHUB_OAUTH_TOKEN
         file:
