@@ -1,37 +1,17 @@
 dist: trusty
 sudo: required
-services: docker
+language: java
+jdk: oraclejdk8
+services:
+  - docker
 env:
   - RELEASE_TAG="release-$TRAVIS_BUILD_NUMBER"
-stages:
-  - build
-  - deploy
-if: tag IS blank
 
-jobs:
-  include:
-    - stage: build
-      language: java
-      jdk: oraclejdk8
-      install: skip
-      script:
-        - ./gradlew clean build
-      before_deploy:
-        - git config --local user.name "Travis CI"
-        - git config --local user.email "travis@example.com"
-        - git tag -f $RELEASE_TAG
-      deploy: &github
-        provider: releases
-        api_key: $GITHUB_OAUTH_TOKEN
-        file:
-          - "build/libs/spring-boot-ci-travis.jar"
-        skip_cleanup: true
+script:
+  - ./gradlew clean test
+  - ./gradlew build
 
-    - stage: deploy
-      language: bash
-      script:
-        - echo "Downloading application $RELEASE_TAG"
-      deploy:
-        provider: heroku
-        api_key: $HEROKU_API_KEY
-        app: spring-boot-ci-travis
+deploy:
+  provider: heroku
+  api_key: $HEROKU_API_KEY
+  app: spring-boot-ci-travis
